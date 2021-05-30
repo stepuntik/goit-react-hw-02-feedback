@@ -18,18 +18,18 @@ export default class App extends Component {
     });
   };
 
-  countTotalFeedback = (good, neutral, bad) => {
-    return good + neutral + bad;
-  };
+  countTotalFeedback = (good, neutral, bad) => good + neutral + bad;
 
   countPositiveFeedbackPercentage = (good, neutral, bad) => {
-    if (good + neutral + bad === 0) return 0;
+    const total = good + neutral + bad;
 
-    return (good / (good + neutral + bad)) * 100;
+    return total ? (good / total) * 100 : 0;
   };
 
   render() {
     const { good, neutral, bad } = this.state;
+
+    const total = this.countTotalFeedback(good, neutral, bad);
 
     return (
       <form>
@@ -41,20 +41,20 @@ export default class App extends Component {
         </SectionTitle>
 
         <SectionTitle title="Statistics">
-          {good + neutral + bad === 0 ? (
-            <Notification message="No feedback given" />
-          ) : (
+          {total ? (
             <Statistics
               good={good}
               neutral={neutral}
               bad={bad}
-              total={this.countTotalFeedback(good, neutral, bad)}
+              total={total}
               positivePercentage={this.countPositiveFeedbackPercentage(
                 good,
                 neutral,
                 bad
               )}
             />
+          ) : (
+            <Notification message="No feedback given" />
           )}
         </SectionTitle>
       </form>
